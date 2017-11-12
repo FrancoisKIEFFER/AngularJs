@@ -6,7 +6,7 @@ angular
       $locationProvider.hashPrefix("");
     }
   ])
-  .controller("WebmailCtrl", function($scope, $location) {
+  .controller("WebmailCtrl", function($scope, $location, $filter) {
     $scope.dossiers = [
       {
         value: "RECEPTION",
@@ -168,6 +168,15 @@ angular
           $scope.champTri == champ && $scope.triDescendant
       };
     };
+
+    $scope.recherche = "";
+    $scope.razRecherche = function() {
+      $scope.recherche = "";
+    };
+
+    // $scope.getDossiersFiltres = function() {
+    //   return $filter("filter")($scope.dossierCourant.emails, $scope.recherche);
+    // };
 
     $scope.$watch(
       function() {
