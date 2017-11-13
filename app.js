@@ -132,6 +132,8 @@ angular
         ]
       }
     ];
+
+    $scope.idProchainMail = 12;
     $scope.dossierCourant = null;
     $scope.emailSelectionne = null;
 
@@ -142,11 +144,16 @@ angular
     $scope.selectionDossier = function(dossier) {
       $scope.dossierCourant = dossier;
       $scope.emailSelectionne = null;
+      if (dossier) {
+        $scope.nouveauMail = null;
+      }
     };
 
     $scope.selectionEmail = function(email) {
       $scope.emailSelectionne = email;
     };
+
+    //tri
 
     $scope.champTri = null;
     $scope.triDescendant = false;
@@ -169,6 +176,8 @@ angular
       };
     };
 
+    //recherche
+
     $scope.recherche = "";
     $scope.razRecherche = function() {
       $scope.recherche = "";
@@ -178,6 +187,29 @@ angular
     //   return $filter("filter")($scope.dossierCourant.emails, $scope.recherche);
     // };
 
+    //creation d'emails
+
+    $scope.nouveauMail = null;
+    $scope.razMail = function() {
+      $scope.nouveauMail = {
+        from: "Rudy",
+        date: new Date()
+      };
+    };
+
+    $scope.envoiMail = function() {
+      $scope.dossiers.forEach(function(item) {
+        if (item.value == "ENVOYES") {
+          $scope.nouveauMail.id = $scope.idProchainMail++;
+          item.emails.push($scope.nouveauMail);
+          $scope.nouveauMail = null;
+          $scope.path("/");
+        }
+      });
+    };
+
+    //navigation
+
     $scope.$watch(
       function() {
         return $location.path();
@@ -185,19 +217,24 @@ angular
       function(newPath) {
         var tabPath = newPath.split("/");
         if (tabPath.length > 1) {
-          var valDossier = tabPath[1];
-          $scope.dossiers.forEach(function(item) {
-            if (item.value == valDossier) {
-              $scope.selectionDossier(item);
-            }
-          });
-          if (tabPath.length > 2) {
-            var idMail = tabPath[2];
-            $scope.dossierCourant.emails.forEach(function(item) {
-              if (item.id == idMail) {
-                $scope.selectionEmail(item);
+          if (tabPath[1] == "nouveauMail") {
+            $scope.razMail();
+            $scope.selectionDossier(null);
+          } else {
+            var valDossier = tabPath[1];
+            $scope.dossiers.forEach(function(item) {
+              if (item.value == valDossier) {
+                $scope.selectionDossier(item);
               }
             });
+            if (tabPath.length > 2) {
+              var idMail = tabPath[2];
+              $scope.dossierCourant.emails.forEach(function(item) {
+                if (item.id == idMail) {
+                  $scope.selectionEmail(item);
+                }
+              });
+            }
           }
         }
       }

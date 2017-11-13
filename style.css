@@ -37,3 +37,12 @@ a {
 .surbrillanceRecherche {
   background-color: #ffd42a;
 }
+.labelChampNouveauMail {
+  width: 70px;
+}
+.input-group {
+  width: 100%;
+}
+.contenuNouveauMail {
+  width: 100%;
+}
